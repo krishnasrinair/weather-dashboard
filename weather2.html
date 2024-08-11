@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Weather Dashboard</title>
+  <style>
+    #weather-container {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .weather-card {
+      border: 1px solid #ccc;
+      margin: 10px;
+      padding: 10px;
+      width: 200px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Weather Dashboard</h1>
+  <div id="weather-container"></div>
+
+  <script>
+    // Get the weather data from the API
+    fetch('https://api.weatherapi.com/v1/forecast.json?key=YOUR_API_KEY&q=London&days=3')
+      .then(response => response.json())
+      .then(data => {
+        const weatherContainer = document.getElementById('weather-container');
+        const forecasts = data.forecast.forecastday;
+
+        // Create a weather card for each forecast
+        forecasts.forEach((forecast) => {
+          const date = forecast.date;
+          const conditionIcon = forecast.day.condition.icon;
+          const conditionText = forecast.day.condition.text;
+          const maxTemp = forecast.day.maxtemp_c;
+
+          const weatherCard = document.createElement('div');
+          weatherCard.classList.add('weather-card');
+          weatherCard.innerHTML = 
+            <p>Date: ${date}</p>
+            <img src="${conditionIcon}" alt="${conditionText}">
+            <p>Condition: ${conditionText}</p>
+            <p>Max Temperature: ${maxTemp}°C</p>
+          ;
+
+          weatherContainer.appendChild(weatherCard);
+        });
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  </script>
+</body>
+</html>
